@@ -137,7 +137,9 @@ function evaluate(major, entries, econ5){
   let eff = current, e5used = false;
   if (econ5 && GRADE_POINTS.hasOwnProperty(econ5.grade) && econ5.first){
     const cand = wgpa(cu.concat([5]), cp.concat([GRADE_POINTS[econ5.grade]]));
-    if (current !== null && cand > current-1e-9 && current < REQ && cand >= REQ){
+    // Apply ECON 5 whenever it raises the GPA (it may only help, never hurt),
+    // whether or not it is the deciding factor in reaching 2.85.
+    if (current !== null && cand > current+1e-9){
       e5used = true; eff = cand;
     }
   } else if (econ5 && GRADE_POINTS.hasOwnProperty(econ5.grade) && econ5.first===false){
@@ -163,7 +165,7 @@ function evaluate(major, entries, econ5){
     ". A pre-major course must be passed with a C or higher; this course would need to be retaken.");
   if (nonuc.length) notes.push("Non-UC credit (excluded from the GPA) for: "+nonuc.join(", ")+
     ". You receive course credit, but the 2.85 must be met with your UC-taken pre-major courses.");
-  if (e5used) notes.push("Your ECON 5 grade was applied to help you reach 2.85. Confirm eligibility with the Economics Undergraduate Advising Office.");
+  if (e5used) notes.push("Your ECON 5 grade was applied because it raises your pre-major GPA. Confirm eligibility with the Economics Undergraduate Advising Office.");
 
   return {current, eff, met, metOnlyE5: e5used && met, hasRemaining: rem>0,
     remCodes, compCodes, reqAvg, reqLetter, reqAvgE5, reqLetterE5, proj,
